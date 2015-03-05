@@ -1,10 +1,9 @@
 /*    PoissonDirichlet:
  *
  *    Copyright (C) 2013 University of Southern California and
- *                       Andrew D. Smith
  *                       Timothy Daley
  *
- *    Authors: Andrew D. Smith and Timothy Daley
+ *    Authors: Timothy Daley
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by

@@ -1,10 +1,9 @@
 /*    PoissonDirichlet:
  *
  *    Copyright (C) 2013 University of Southern California and
- *                       Andrew D. Smith
  *                       Timothy Daley
  *
- *    Authors: Andrew D. Smith and Timothy Daley
+ *    Authors: Timothy Daley
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -55,7 +54,7 @@ const size_t PDD::max_iter = 50;
 
 
 static double
-empirical_bayes_log_eq(const vector<double> &counts,
+pdd_log_eq(const vector<double> &counts,
 		       const double counts_sum,
 		       const double theta,
 		       const double sigma){
@@ -76,7 +75,7 @@ empirical_bayes_log_eq(const vector<double> &counts,
 
 
 static double
-empirical_bayes_log_dsigma(const vector<double> &counts,
+pdd_log_dsigma(const vector<double> &counts,
 			   const double counts_sum,
 			   const double theta,
 			   const double sigma){
@@ -92,7 +91,7 @@ empirical_bayes_log_dsigma(const vector<double> &counts,
 }
 
 static double
-empirical_bayes_log_dtheta(const vector<double> &counts,
+pdd_log_dtheta(const vector<double> &counts,
 			   const double counts_sum,
 			   const double theta,
 			   const double sigma){
@@ -109,7 +108,7 @@ empirical_bayes_log_dtheta(const vector<double> &counts,
 }
 
 static double
-empirical_bayes_log_dtheta_dsigma(const vector<double> &counts,
+pdd_log_dtheta_dsigma(const vector<double> &counts,
 				  const double counts_sum,
 				  const double theta,
 				  const double sigma){
@@ -122,7 +121,7 @@ empirical_bayes_log_dtheta_dsigma(const vector<double> &counts,
 }
 
 static double
-empirical_bayes_log_d2theta(const vector<double> &counts,
+pdd_log_d2theta(const vector<double> &counts,
 				  const double counts_sum,
 				  const double theta,
 				  const double sigma){
@@ -139,7 +138,7 @@ empirical_bayes_log_d2theta(const vector<double> &counts,
 }
 
 static double
-empirical_bayes_log_d2sigma(const vector<double> &counts,
+pdd_log_d2sigma(const vector<double> &counts,
 				  const double counts_sum,
 				  const double theta,
 				  const double sigma){
@@ -178,20 +177,20 @@ NewtonRaphson2dStep(const vector<double> &counts,
 		    vector<double> &step){
   // set derivative
   vector<double> deriv(2, 0.0);
-  deriv[0] = empirical_bayes_log_dtheta(counts, counts_sum,
+  deriv[0] = pdd_log_dtheta(counts, counts_sum,
 					current_theta, current_sigma);
-  deriv[1] = empirical_bayes_log_dsigma(counts, counts_sum,
+  deriv[1] = pdd_log_dsigma(counts, counts_sum,
 					current_theta, current_sigma);
   // set jacobian
   vector< vector<double> > jacobian(2, vector<double>(2, 0.0));
   jacobian[0][0] = 
-    empirical_bayes_log_d2theta(counts, counts_sum, current_theta, current_sigma);
+    pdd_log_d2theta(counts, counts_sum, current_theta, current_sigma);
   jacobian[0][1] = 
-    empirical_bayes_log_dtheta_dsigma(counts, counts_sum, current_theta, current_sigma);
+    pdd_log_dtheta_dsigma(counts, counts_sum, current_theta, current_sigma);
   jacobian[1][0] = 
-    empirical_bayes_log_dtheta_dsigma(counts, counts_sum, current_theta, current_sigma);
+    pdd_log_dtheta_dsigma(counts, counts_sum, current_theta, current_sigma);
   jacobian[1][1] = 
-    empirical_bayes_log_d2sigma(counts, counts_sum, current_theta, current_sigma);
+    pdd_log_d2sigma(counts, counts_sum, current_theta, current_sigma);
 
   // jacobian is now the inverse jacobian
   invert_square_matrix(jacobian);
@@ -264,13 +263,13 @@ PDD::newton_raphson_estim_params(const bool VERBOSE, const vector<double> &count
     }
 
     error = 
-      pow(empirical_bayes_log_eq(counts, counts_sum, current_theta, current_sigma)
-	  - empirical_bayes_log_eq(counts, counts_sum, prev_theta, prev_sigma), 2);
+      pow(pdd_log_eq(counts, counts_sum, current_theta, current_sigma)
+	  - pdd_log_eq(counts, counts_sum, prev_theta, prev_sigma), 2);
     iter++;
 
     if(VERBOSE){
       cerr << "iter = " << iter << endl;
-      cerr << "func = " << empirical_bayes_log_eq(counts, counts_sum, current_theta, current_sigma) << endl;
+      cerr << "func = " << pdd_log_eq(counts, counts_sum, current_theta, current_sigma) << endl;
       cerr << "(theta, sigma) = (" << current_theta << ", " << current_sigma << ")" << endl;
     }
   } while (iter < max_iter && error > tolerance);

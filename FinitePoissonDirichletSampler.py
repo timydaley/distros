@@ -56,13 +56,13 @@ def main():
                       help = 'output file name')
   parser.add_argument('-k', '--kappa', dest = 'kappa',
                       default = 1.0, type = float,
-                      help = 'kappa parameter, must be positive')
+                      help = 'kappa parameter, must be positive, default is 1.0')
   parser.add_argument('-m', '--pop_size', dest = 'm',
                       default = 1000000, type = int,
-                      help = 'size of population to be sampled from')
+                      help = 'size of population to be sampled from, default is 1,000,000')
   parser.add_argument('-n', '--sample_size', dest = 'n',
                       default = 1000000, type = int,
-                      help = 'number of individuals to sample')
+                      help = 'number of individuals to sample, default is 1,00,000')
   parser.add_argument('-s', '--seed', dest = 'seed',
                       default = None, 
                       help = 'seed for random number generator')

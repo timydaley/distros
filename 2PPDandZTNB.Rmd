@@ -21,7 +21,7 @@ Note that if $Y_{1}, \ldots, Y_{S}$ are iid Gamma$(\kappa)$ distributed, then th
 
 Let's test this out.  I wrote the following Python script to sample according to the F2PD.
 ```{r engine='sh'}
-cat FinitePoissonDirichletSampler.py
+tail -n 74 FinitePoissonDirichletSampler.py
 ```
 
 I sample 100 samples of 10,000 individuals from a F2PD with parameter $\kappa = 1.0$ and population size $S = $10,000.  This should result in a ZTNB with mean $\mu = 1$ and size $k = 1$.   
